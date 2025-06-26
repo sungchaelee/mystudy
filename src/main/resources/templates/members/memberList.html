@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원목록 - Hello Spring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff9a56 0%, #ff7b25 50%, #ff6b1a 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(255, 107, 26, 0.2);
+            border: 3px solid #ffe4d6;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '🍊 회원목록';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #ff9a56, #ff6b1a);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 26, 0.3);
+            z-index: 10;
+        }
+
+        .table-wrapper {
+            padding: 3rem 2rem 2rem 2rem;
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(255, 107, 26, 0.1);
+        }
+
+        thead {
+            background: linear-gradient(45deg, #ff9a56, #ff6b1a);
+        }
+
+        th {
+            padding: 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        th:first-child {
+            width: 20%;
+        }
+
+        tbody tr {
+            background: #fff8f5;
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #ffe4d6;
+        }
+
+        tbody tr:hover {
+            background: linear-gradient(90deg, #ffcc9a, #ffb375);
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(255, 107, 26, 0.2);
+        }
+
+        td {
+            padding: 18px 20px;
+            text-align: center;
+            color: #8b4513;
+            font-weight: 500;
+            font-size: 1rem;
+            border-bottom: 1px solid #ffd4b8;
+        }
+
+        td:first-child {
+            font-weight: bold;
+            color: #ff6b1a;
+            font-size: 1.1rem;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 3rem;
+            color: #ff7b25;
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #ff6b1a;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid #ff9a56;
+            box-shadow: 0 4px 15px rgba(255, 107, 26, 0.3);
+        }
+
+        .back-btn:hover {
+            background: #ff9a56;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 26, 0.4);
+        }
+
+        .member-count {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #8b4513;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* 배경 장식 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 10%;
+            right: 10%;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 154, 86, 0.2), transparent);
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 15%;
+            left: 5%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255, 107, 26, 0.15), transparent);
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 5s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(180deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0.5rem;
+                border-radius: 15px;
+            }
+
+            .table-wrapper {
+                padding: 2rem 1rem 1rem 1rem;
+            }
+
+            .back-btn {
+                position: static;
+                display: inline-block;
+                margin: 1rem auto;
+                width: auto;
+            }
+
+            th, td {
+                padding: 12px 8px;
+                font-size: 0.9rem;
+            }
+
+            .container::before {
+                font-size: 1rem;
+                padding: 6px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            th:first-child, td:first-child {
+                width: 25%;
+            }
+
+            th, td {
+                padding: 10px 6px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<a href="/" class="back-btn">← 홈으로</a>
+
+<div class="container">
+    <div class="table-wrapper">
+        <div class="member-count" th:if="${members.size() > 0}">
+            총 <span style="color: #ff6b1a; font-weight: bold;" th:text="${members.size()}"></span>명의 회원이 있습니다
+        </div>
+
+        <table th:if="${members.size() > 0}">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>이름</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.id}"></td>
+                <td th:text="${member.name}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="empty-message" th:if="${members.size() == 0}">
+            🍊 아직 등록된 회원이 없습니다
+        </div>
+    </div>
+</div>
+</body>
+</html>
